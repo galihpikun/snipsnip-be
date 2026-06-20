@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model snippets {
+  id             String           @id @default(dbgenerated("gen_random_uuid()"))
+  created_at     DateTime         @default(now()) @db.Timestamptz(6)
+  owner          Int              @db.SmallInt
+  title          String
+  description    String
+  framework      String
+  language       String
+  users          users            @relation(fields: [owner], references: [id], onDelete: Cascade)
+  snippets_files snippets_files[]
+}
+
+model snippets_files {
+  id         String   @id @default(dbgenerated("gen_random_uuid()"))
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  snippet_id String
+  filename   String
+  language   String?
+  content    String?  @default("")
+  snippets   snippets @relation(fields: [snippet_id], references: [id], onDelete: Cascade)
+}
+
+model users {
+  id         Int        @id @default(autoincrement()) @db.SmallInt
+  created_at DateTime   @default(now()) @db.Timestamptz(6)
+  username   String
+  email      String     @unique
+  password   String
+  bio        String?
+  snippets   snippets[]
+}
