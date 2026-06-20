@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors';
 import routerAuth from './src/routes/authRoute.js';
+import routerSnippet from './src/routes/snippetRoute.js';
 
 
 const app = express()
@@ -10,6 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api/auth", routerAuth)
+app.use('/api/snippets', routerSnippet);
 
 app.get('/', (req, res) => {
   res.send('Code Snippet API is succesfully running!')
