@@ -144,6 +144,7 @@ export const getMe = async (req,res) => {
                 id: true,
                 username: true,
                 email: true,
+                bio: true,
             },
         });
         if (!user) {
@@ -161,6 +162,7 @@ export const getMe = async (req,res) => {
                 id: Number(user.id),
                 username: user.username,
                 email: user.email,
+                bio: user.bio
             },
         });
 
@@ -171,4 +173,49 @@ export const getMe = async (req,res) => {
             message: error.message,
         });
     }
+}
+
+export const updateMe = async (req, res) => {
+  const userId = req.user.id;
+
+  const {username, email, bio} = req.body;
+
+  if (!username || !email || !bio) {
+    return res.status(400).json({
+      code: 400,
+      message: "Field harus diisi semua",
+    });
+  }
+
+  try {
+    const user = await prisma.users.update({
+      where:{
+        id: Number(userId),
+      },
+      data:{
+        username: username,
+        email: email,
+        bio: bio,
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        bio: true,
+      },
+    })
+
+    return res.status(200).json({
+      code:200,
+      success:true,
+      message: "Berhasil update data user",
+      data: user
+    })
+  } catch (error) {
+    console.error(error);
+        return res.status(500).json({
+            code: 500,
+            message: error.message,
+        });
+  }
 }
