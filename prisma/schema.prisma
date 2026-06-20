@@ -9,6 +9,7 @@ datasource db {
 model snippets {
   id             String           @id @default(dbgenerated("gen_random_uuid()"))
   created_at     DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime?        @updatedAt @db.Timestamptz(6)
   owner          Int              @db.SmallInt
   title          String
   description    String
@@ -21,6 +22,7 @@ model snippets {
 model snippets_files {
   id         String   @id @default(dbgenerated("gen_random_uuid()"))
   created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime?        @updatedAt @db.Timestamptz(6)
   snippet_id String
   filename   String
   language   String?
